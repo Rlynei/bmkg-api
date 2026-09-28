@@ -27,10 +27,21 @@ class WeatherController extends Controller
     public function search(Request $request)
     {
         $request->validate(['q' => 'required|string|min:3']);
-        $wilayah = Wilayah::where('nama_kelurahan', 'like', "%{$request->q}%")
-        ->orWhere('nama_kecamatan', 'like', "%{$request->q}%")
-        ->limit(10)
-        ->get();
-        return response()->json($wilayah);
+        $terms = preg_split('/\s+/', trim($request->q));
+        $query = Wilayah::query();
+        foreach ($terms as $term){
+            $query->where(function ($q) use ($term) {
+                $q->where('nama_kelurahan', 'like', "%$term%")
+                    ->orWhere('nama_kecamatan', 'like', "%$term%")
+                    ->orWhere('nama_kabupaten', 'like', "%$term%")
+                    ->orWhere('nama_provinsi', 'like', "%$term%");
+            });
+        }
+        return response()->json(
+            $query->orderByRaw('nama_kelurahan LIKE ? DESC', ["{$terms[0]}%"])
+                ->orderBy('nama_kelurahan')
+                ->limit(15)
+                ->get()
+        );
     }
 }
