@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\KegiatanController;
 use App\Http\Controllers\Api\WeatherController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\NowcastController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -34,6 +35,9 @@ Route::get('/berita/{slug}', [BeritaController::class, 'show']);
 
 Route::get('/kegiatan', [KegiatanController::class, 'index']);
 Route::get('/kegiatan/{slug}', [KegiatanController::class, 'show']);
+
+Route::get('/peringatan-dini', [NowcastController::class, 'index']);
+Route::get('/peringatan-dini/{kode}', [NowcastController::class, 'show']);
 
 // ROUTE ADMIN — wajib login + role tertentu
 Route::middleware(['auth:sanctum', 'role:superadmin,admin,editor'])->prefix('admin')->group(function () {
