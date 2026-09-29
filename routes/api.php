@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\WeatherController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\NowcastController;
+use App\Http\Controllers\Api\GempaController;
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
@@ -38,6 +39,10 @@ Route::get('/kegiatan/{slug}', [KegiatanController::class, 'show']);
 
 Route::get('/peringatan-dini', [NowcastController::class, 'index']);
 Route::get('/peringatan-dini/{kode}', [NowcastController::class, 'show']);
+
+Route::get('/gempabumi/terkini', [GempaController::class, 'terkini']);
+Route::get('/gempabumi/m5', [GempaController::class, 'm5']);
+Route::get('/gempabumi/dirasakan', [GempaController::class, 'dirasakan']);
 
 // ROUTE ADMIN — wajib login + role tertentu
 Route::middleware(['auth:sanctum', 'role:superadmin,admin,editor'])->prefix('admin')->group(function () {
